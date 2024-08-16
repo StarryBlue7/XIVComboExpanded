@@ -12,7 +12,6 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using Newtonsoft.Json.Linq;
 using XIVComboExpandedPlugin.Attributes;
 using XIVComboExpandedPlugin.Combos;
 using Action = Lumina.Excel.GeneratedSheets.Action;

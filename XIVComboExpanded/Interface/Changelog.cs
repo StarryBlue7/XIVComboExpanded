@@ -13,6 +13,12 @@ namespace XIVComboExpanded.Interface
             return new Dictionary<string, string[]>()
                 {
                     {
+                        "v2.0.0.12",
+                        [
+                            "Fixed ADV's Swift Raise Feature. Sorry about that!"
+                        ]
+                    },
+                    {
                         "v2.0.0.11",
                         [
                             "Reworked the drawing engine to use ImRaii instead of ImGUI for better performances and prevent font/colors leaking issues.",
@@ -20,7 +26,7 @@ namespace XIVComboExpanded.Interface
                             "Added the English name of skills when icons are hovered if you're not using an English client.",
                             "Added the level at which a skill is learnt after the skill's name.",
                             "Added additional checks for the auto-selection settings to prevent background issues.",
-                            "Fixed Silent Peloton checking if you were in combat instead of out of combat.",
+                            "Fixed ADV's Silent Peloton checking if you were in combat instead of out of combat.",
                             "Fixed VPR's Serpent's Ire on Reawaken replacing every button.",
                             "Added VPR level check for Auto Steel Reaving's Reaving Maw.",
                             "Added VPR checks to determine whether oGCDs can be used or not to prevent No Abilities in Deep Dungeons to lock you in unusable skills."
