@@ -15,8 +15,15 @@ namespace XIVComboExpanded.Interface
                     {
                         "v2.0.0.11",
                         [
-                            "Changed the Combo tabs order.",
-                            "Fixed VPR's Serpent's Ire on Reawaken.",
+                            "Reworked the drawing engine to use ImRaii instead of ImGUI for better performances and prevent font/colors leaking issues.",
+                            "Changed the Combo tabs order so that they go from the most available options to the least ones.",
+                            "Added the English name of skills when icons are hovered if you're not using an English client.",
+                            "Added the level at which a skill is learnt after the skill's name.",
+                            "Added additional checks for the auto-selection settings to prevent background issues.",
+                            "Fixed Silent Peloton checking if you were in combat instead of out of combat.",
+                            "Fixed VPR's Serpent's Ire on Reawaken replacing every button.",
+                            "Added VPR level check for Auto Steel Reaving's Reaving Maw.",
+                            "Added VPR checks to determine whether oGCDs can be used or not to prevent No Abilities in Deep Dungeons to lock you in unusable skills."
                         ]
                     },
                     {
@@ -64,7 +71,7 @@ namespace XIVComboExpanded.Interface
                     {
                         "v2.0.0.7",
                         [
-                            "MCH's Gauss Round / Double Check & Ricochet / Checkmate Feature fix if Checkmate/Double Check were assigned in the hotbar instead of Ricochet/Gauss Round.",
+                            "MCH's Gauss Round / Double Check & Ricochet / Checkmate Feature fix if Checkmate/Double Check\nwere assigned in the hotbar instead of Ricochet/Gauss Round.",
                         ]
                     },
                     {

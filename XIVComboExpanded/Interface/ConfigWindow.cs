@@ -7,6 +7,7 @@ using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Textures;
+using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using ImGuiNET;
@@ -90,530 +91,550 @@ public class ConfigWindow : Window
     /// <inheritdoc/>
     public override void Draw()
     {
-        if (ImGui.BeginTabBar("Tabs"))
+        using (var generalTabs = ImRaii.TabBar("Tabs"))
         {
-            #region COMBOS TAB
-
-            if (ImGui.BeginTabItem("Combos"))
+            if (generalTabs)
             {
-                // This is cursed. I'm lazy. Don't judge me. Or do. I don't care. It's imgui anyway.
-                if (!(Service.Configuration.CurrentJobTab is "Adventurer" or "Disciples of the Land" or "Paladin" or "Monk" or "Warrior" or "Dragoon" or "Bard" or "White Mage"
-                    or "Black Mage" or "Summoner" or "Scholar" or "Ninja" or "Machinist" or "Dark Knight" or "Astrologian"
-                    or "Samurai" or "Red Mage" or "Gunbreaker" or "Dancer" or "Reaper" or "Sage" or "Viper" or "Pictomancer"))
-                {
-                    Service.Configuration.CurrentJobTab = "Adventurer";
-                    Service.Configuration.Save();
-                }
+                #region COMBOS TAB
 
-                float scale = 1f;
-                if (Service.Configuration.BigJobIcons)
-                    scale = 1.5f;
-                if (ImGui.BeginChild("TabButtons", new System.Numerics.Vector2(36f*scale, 0f), false, ImGuiWindowFlags.NoScrollbar))
+                using (var combosTab = ImRaii.TabItem("Combos"))
                 {
-                    ImGui.SameLine(1f);
-
-                    ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new System.Numerics.Vector2(4f, 3f));
-                    if (ImGui.BeginTable("TabButtonsTable", 1, ImGuiTableFlags.None, new System.Numerics.Vector2(36f*scale, 36f*scale), 4f*scale))
+                    if (combosTab)
                     {
-                        if ((Service.Configuration.CurrentJobTab == "Adventurer"
-                            || Service.Configuration.CurrentJobTab == "Disciples of the Land"
-                            || Service.Configuration.CurrentJobTab == "Sage") && !Service.Configuration.EnableExpandedCombos)
+                        // This is cursed. I'm lazy. Don't judge me. Or do. I don't care. It's imgui anyway.
+                        if (!(Service.Configuration.CurrentJobTab is "Adventurer" or "Disciples of the Land" or "Paladin" or "Monk" or "Warrior" or "Dragoon" or "Bard" or "White Mage"
+                            or "Black Mage" or "Summoner" or "Scholar" or "Ninja" or "Machinist" or "Dark Knight" or "Astrologian"
+                            or "Samurai" or "Red Mage" or "Gunbreaker" or "Dancer" or "Reaper" or "Sage" or "Viper" or "Pictomancer"))
                         {
-                            Service.Configuration.CurrentJobTab = "Paladin";
+                            Service.Configuration.CurrentJobTab = "Adventurer";
+                            Service.Configuration.Save();
                         }
 
-                        foreach (var jobName in this.groupedPresets.Keys)
+                        float scale = 1f;
+                        if (Service.Configuration.BigJobIcons)
+                            scale = 1.5f;
+                        if (ImGui.BeginChild("TabButtons", new System.Numerics.Vector2(36f * scale, 0f), false, ImGuiWindowFlags.NoScrollbar))
                         {
-                            if ((jobName is "Adventurer" or "Disciples of the Land" or "Sage") && !Service.Configuration.EnableExpandedCombos)
+                            ImGui.SameLine(1f);
+
+                            using (ImRaii.PushStyle(ImGuiStyleVar.FramePadding, new System.Numerics.Vector2(4f, 3f)))
                             {
-                            }
-                            else
-                            {
-                                ImGui.TableNextRow();
-                                ImGui.TableNextColumn();
-                                ImGui.PushID($"EditorTab{CustomComboInfoAttribute.NameToJobID(jobName)}");
-                                bool selected = Service.Configuration.CurrentJobTab == jobName ? true : false;
-                                if (selected)
+                                if (ImGui.BeginTable("TabButtonsTable", 1, ImGuiTableFlags.None, new System.Numerics.Vector2(36f * scale, 36f * scale), 4f * scale))
                                 {
-                                    ImGui.PushStyleColor(ImGuiCol.Button, ImGuiColors.DalamudGrey2);
-                                    ImGui.PushStyleColor(ImGuiCol.Border, ImGuiColors.DalamudGrey3);
-                                }
-                                else
-                                {
-                                    ImGui.PushStyleColor(ImGuiCol.Button, 0);
-                                    ImGui.PushStyleColor(ImGuiCol.Border, 0);
-                                }
-
-                                ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 0);
-
-                                ISharedImmediateTexture image = GetJobIcon(CustomComboInfoAttribute.NameToJobID(jobName));
-
-                                if (image != null)
-                                {
-                                    if (ImGui.ImageButton(image.GetWrapOrEmpty().ImGuiHandle, new System.Numerics.Vector2(28f*scale, 28f*scale)))
+                                    if ((Service.Configuration.CurrentJobTab == "Adventurer"
+                                        || Service.Configuration.CurrentJobTab == "Disciples of the Land"
+                                        || Service.Configuration.CurrentJobTab == "Sage") && !Service.Configuration.EnableExpandedCombos)
                                     {
-                                        Service.Configuration.CurrentJobTab = jobName;
+                                        Service.Configuration.CurrentJobTab = "Paladin";
                                     }
 
-                                    if (ImGui.IsItemHovered())
+                                    foreach (var jobName in this.groupedPresets.Keys)
                                     {
-                                        ImGui.BeginTooltip();
-                                        ImGui.TextUnformatted(jobName);
-                                        ImGui.EndTooltip();
-                                    }
-                                }
+                                        if ((jobName is "Adventurer" or "Disciples of the Land" or "Sage") && !Service.Configuration.EnableExpandedCombos)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ImGui.TableNextRow();
+                                            ImGui.TableNextColumn();
+                                            ImGui.PushID($"EditorTab{CustomComboInfoAttribute.NameToJobID(jobName)}");
+                                            bool selected = Service.Configuration.CurrentJobTab == jobName ? true : false;
 
-                                ImGui.PopStyleVar();
-                                ImGui.PopStyleColor(2);
-                                ImGui.PopID();
+                                            using (selected ? ImRaii.PushColor(ImGuiCol.Button, ImGuiColors.DalamudGrey2) : ImRaii.PushColor(ImGuiCol.Button, 0))
+                                            using (selected ? ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudGrey3) : ImRaii.PushColor(ImGuiCol.Border, 0))
+                                            using (ImRaii.PushStyle(ImGuiStyleVar.FramePadding, new System.Numerics.Vector2(4f, 3f)))
+                                            {
+                                                ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 0);
+
+                                                ISharedImmediateTexture image = GetJobIcon(CustomComboInfoAttribute.NameToJobID(jobName));
+
+                                                if (image != null)
+                                                {
+                                                    if (ImGui.ImageButton(image.GetWrapOrEmpty().ImGuiHandle, new System.Numerics.Vector2(28f * scale, 28f * scale)))
+                                                    {
+                                                        Service.Configuration.CurrentJobTab = jobName;
+                                                    }
+
+                                                    if (ImGui.IsItemHovered())
+                                                    {
+                                                        ImGui.BeginTooltip();
+                                                        ImGui.TextUnformatted(jobName);
+                                                        ImGui.EndTooltip();
+                                                    }
+                                                }
+                                            }
+
+                                            ImGui.PopID();
+                                        }
+                                    }
+
+                                    ImGui.EndTable();
+                                }
                             }
+
+                            ImGui.EndChild();
                         }
 
-                        ImGui.EndTable();
-                        ImGui.PopStyleVar();
+                        ImGui.SameLine();
+
+                        ImGui.BeginGroup();
+
+                        ImGui.Indent(-10f);
+                        if (ImGui.BeginChild("TabContent", new Vector2(0, -1), true, ImGuiWindowFlags.NoBackground))
+                        {
+                            #region COMBOS TAB HEADER
+                            var jobID = CustomComboInfoAttribute.NameToJobID(Service.Configuration.CurrentJobTab);
+                            var image = GetJobIcon(jobID);
+                            ImGui.Image(image.GetWrapOrEmpty().ImGuiHandle, new System.Numerics.Vector2(36f, 36f));
+                            ImGui.SameLine();
+                            using (ImRaii.PushFont(UiBuilder.MonoFont))
+                            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.ParsedGold))
+                            {
+                                ImGui.Text($" " + Service.Configuration.CurrentJobTab + "\n " + (CustomComboInfoAttribute.JobIDToRole(jobID) != "Adventurer" ? CustomComboInfoAttribute.JobIDToRole(jobID) : "Warrior of Light"));
+                            }
+
+                            ImGui.Separator();
+                            #endregion
+
+                            using (var combosTabTab = ImRaii.TabBar("ComboTabs"))
+                            {
+                                if (combosTabTab)
+                                {
+                                    if (Service.Configuration.EnableExpandedCombos && Service.Configuration.EnableAccessibilityCombos && Service.Configuration.EnableSecretCombos)
+                                    {
+                                        using (var secretTab = ImRaii.TabItem("Secret"))
+                                        {
+                                            if (secretTab)
+                                            {
+                                            ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
+
+                                            int i = 1;
+                                            string previousSection = string.Empty;
+                                            foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                                            {
+                                                previousSection = this.DrawPreset(Tabs.Secret, preset, info, previousSection, ref i);
+                                            }
+
+                                            ImGui.EndChild();
+                                            }
+                                        }
+                                    }
+
+                                    if (Service.Configuration.EnableExpandedCombos && Service.Configuration.EnableAccessibilityCombos)
+                                    {
+                                        using (var accessibilityTab = ImRaii.TabItem("Accessibility"))
+                                        {
+                                            if (accessibilityTab)
+                                            {
+                                                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
+
+                                                int i = 1;
+                                                string previousSection = string.Empty;
+                                                foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                                                {
+                                                    previousSection = this.DrawPreset(Tabs.Accessibility, preset, info, previousSection, ref i);
+                                                }
+
+                                                ImGui.EndChild();
+                                            }
+                                        }
+                                    }
+
+                                    if (Service.Configuration.EnableExpandedCombos)
+                                    {
+                                        using (var expandedTab = ImRaii.TabItem("Expanded"))
+                                        {
+                                            if (expandedTab)
+                                            {
+                                                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
+
+                                                int i = 1;
+                                                string previousSection = string.Empty;
+                                                foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                                                {
+                                                    previousSection = this.DrawPreset(Tabs.Expanded, preset, info, previousSection, ref i);
+                                                }
+
+                                                ImGui.EndChild();
+                                            }
+                                        }
+                                    }
+
+                                    if (Service.Configuration.CurrentJobTab != "Adventurer" && Service.Configuration.CurrentJobTab != "Disciples of the Land" && Service.Configuration.CurrentJobTab != "Sage")
+                                    {
+                                        using (var classicTab = ImRaii.TabItem("Classic"))
+                                        {
+                                            if (classicTab)
+                                            {
+                                                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
+
+                                                int i = 1;
+                                                string previousSection = string.Empty;
+                                                foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                                                {
+                                                    previousSection = this.DrawPreset(Tabs.Classic, preset, info, previousSection, ref i);
+                                                }
+
+                                                ImGui.EndChild();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            ImGui.EndChild();
+                        }
+
+                        ImGui.Unindent();
+
+                        ImGui.EndGroup();
                     }
-
-                    ImGui.EndChild();
                 }
-                ImGui.SameLine();
+                #endregion
 
-                ImGui.BeginGroup();
+                #region SETTINGS TAB
 
-                ImGui.PushStyleColor(ImGuiCol.ChildBg, ImGuiColors.DalamudWhite);
-                ImGui.PushStyleColor(ImGuiCol.Border, ImGuiColors.DalamudWhite2);
-
-                ImGui.Indent(-10f);
-                if (ImGui.BeginChild("TabContent", new Vector2(0, -1), true, ImGuiWindowFlags.NoBackground))
+                using (var settingsTab = ImRaii.TabItem("Settings"))
                 {
-                    #region COMBOS TAB HEADER
-                    var jobID = CustomComboInfoAttribute.NameToJobID(Service.Configuration.CurrentJobTab);
-                    var image = GetJobIcon(jobID);
-                    ImGui.Image(image.GetWrapOrEmpty().ImGuiHandle, new System.Numerics.Vector2(36f, 36f));
-                    ImGui.SameLine();
-                    ImGui.PushFont(UiBuilder.MonoFont);
-                    ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedGold);
-                    ImGui.Text($" " + Service.Configuration.CurrentJobTab + "\n " + (CustomComboInfoAttribute.JobIDToRole(jobID) != "Adventurer" ? CustomComboInfoAttribute.JobIDToRole(jobID) : "Warrior of Light"));
-                    ImGui.PopStyleColor();
-                    ImGui.PopFont();
-                    ImGui.Separator();
-                    ImGui.PopStyleColor(2);
-                    #endregion
-
-                    if (ImGui.BeginTabBar("ComboTabs"))
+                    if (settingsTab)
                     {
-                        if (Service.Configuration.CurrentJobTab != "Adventurer" && Service.Configuration.CurrentJobTab != "Disciples of the Land" && Service.Configuration.CurrentJobTab != "Sage")
+                        ImGui.Spacing();
+                        ImGui.Spacing();
+                        ImGuiWindowFlags window_flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.ChildWindow;
+                        using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5)))
                         {
-                            if (ImGui.BeginTabItem("Classic"))
-                            {
-                                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
+                            ImGui.BeginChild("ChildL", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X * 0.5f - ImGui.GetScrollX(), 300f), true, window_flags);
 
-                                int i = 1;
-                                string previousSection = string.Empty;
-                                foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                            using (ImRaii.PushFont(UiBuilder.MonoFont))
+                            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.ParsedGold))
+                            {
+                                ImGui.Text($"General options");
+                            }
+
+                            ImGui.Separator();
+
+                            var enablePlugin = Service.Configuration.EnablePlugin;
+                            if (ImGui.Checkbox("Enables this plugin.", ref enablePlugin))
+                            {
+                                Service.Configuration.EnablePlugin = enablePlugin;
+                                Service.Configuration.Save();
+                            }
+
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.TextUnformatted("Completely disables the plugin's functionalities along with every combo when unchecked.");
+                                ImGui.EndTooltip();
+                            }
+
+                            var autoJobChange = Service.Configuration.AutoJobChange;
+                            if (ImGui.Checkbox("Automatically switch to your current job's tab upon opening the UI.", ref autoJobChange))
+                            {
+                                Service.Configuration.AutoJobChange = autoJobChange;
+                                Service.Configuration.Save();
+                            }
+
+                            var bigComboIcons = Service.Configuration.BigComboIcons;
+                            if (ImGui.Checkbox("Increase the size of icons for combos and features.", ref bigComboIcons))
+                            {
+                                Service.Configuration.BigComboIcons = bigComboIcons;
+                                Service.Configuration.Save();
+                            }
+
+                            var bigJobIcons = Service.Configuration.BigJobIcons;
+                            if (ImGui.Checkbox("Increase the size of icons for the jobs on the side bar.", ref bigJobIcons))
+                            {
+                                Service.Configuration.BigJobIcons = bigJobIcons;
+                                Service.Configuration.Save();
+                            }
+
+                            var hideIcons = Service.Configuration.HideIcons;
+                            if (ImGui.Checkbox("Hide icons for combos and features.", ref hideIcons))
+                            {
+                                Service.Configuration.HideIcons = hideIcons;
+                                Service.Configuration.Save();
+                            }
+
+                            var hideChildren = Service.Configuration.HideChildren;
+                            if (ImGui.Checkbox("Hide children of disabled combos and features.", ref hideChildren))
+                            {
+                                Service.Configuration.HideChildren = hideChildren;
+                                Service.Configuration.Save();
+                            }
+
+                            var hideKoFi = Service.Configuration.HideKofi;
+                            if (ImGui.Checkbox("Hide the Ko-Fi link.", ref hideKoFi))
+                            {
+                                Service.Configuration.HideKofi = hideKoFi;
+                                Service.Configuration.Save();
+                            }
+
+                            ImGui.Spacing();
+                            ImGui.Spacing();
+
+                            if (ImGui.Button("Re-open the first time pop-up window"))
+                            {
+                                Service.Configuration.OneTimePopUp = true;
+                                Plugin.oneTimeModal.IsOpen = true;
+                                Service.Configuration.Save();
+                            }
+
+                            ImGui.EndChild();
+                        }
+
+                        ImGui.SameLine();
+
+                        using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5)))
+                        {
+                            ImGui.BeginChild("ChildR", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X - ImGui.GetScrollX(), 300f), true, window_flags);
+
+                            using (ImRaii.PushFont(UiBuilder.MonoFont))
+                            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.TankBlue))
+                            {
+                                ImGui.Text($"Expanded Combos");
+                            }
+
+                            ImGui.Separator();
+
+                            ImGui.BulletText("Those combos are additional features absent in original XIVCombo.");
+                            ImGui.BulletText("They usually aim at further reducing button bloating.");
+                            ImGui.BulletText("They are also designed to bring QoL improvements to some jobs.");
+                            ImGui.BulletText("They are meant to be used by anyone, whatever their reasons may be.");
+
+                            ImGui.Separator();
+                            ImGui.Spacing();
+                            ImGui.Spacing();
+
+                            var showExpanded = Service.Configuration.EnableExpandedCombos;
+                            if (ImGui.Checkbox("Enable the expanded features for XIVCombo.", ref showExpanded))
+                            {
+                                Service.Configuration.EnableExpandedCombos = showExpanded;
+                                if (!showExpanded)
                                 {
-                                    previousSection = this.DrawPreset(Tabs.Classic, preset, info, previousSection, ref i);
+                                    Service.Configuration.EnableAccessibilityCombos = false;
+                                    Service.Configuration.EnableSecretCombos = false;
                                 }
 
-                                ImGui.EndChild();
-                                ImGui.EndTabItem();
+                                Service.Configuration.Save();
                             }
+
+                            ImGui.EndChild();
                         }
 
                         if (Service.Configuration.EnableExpandedCombos)
                         {
-                            if (ImGui.BeginTabItem("Expanded"))
+                            using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5)))
                             {
-                                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
+                                ImGui.BeginChild("ChildBL", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X * 0.5f - ImGui.GetScrollX(), 300f), true, window_flags);
 
-                                int i = 1;
-                                string previousSection = string.Empty;
-                                foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                                using (ImRaii.PushFont(UiBuilder.MonoFont))
+                                using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))
                                 {
-                                    previousSection = this.DrawPreset(Tabs.Expanded, preset, info, previousSection, ref i);
+                                    ImGui.Text($"Accessibility Combos");
+                                }
+                                ImGui.Separator();
+
+                                ImGui.BulletText("Those combos are non-optimal routes which simplify a rotation overall.");
+                                ImGui.BulletText("They are intuitive, and aim at considerably reducing button bloating.");
+                                ImGui.BulletText("They are meant to be used to give accessibility options to everyone.");
+                                ImGui.BulletText("They will often lower your ability to perform well in high-end content.");
+
+                                ImGui.Separator();
+                                ImGui.Spacing();
+                                ImGui.Spacing();
+
+                                var showAccessibility = Service.Configuration.EnableAccessibilityCombos;
+                                if (ImGui.Checkbox("Enable accessibility combos.", ref showAccessibility))
+                                {
+                                    Service.Configuration.EnableAccessibilityCombos = showAccessibility;
+                                    if (!showAccessibility) Service.Configuration.EnableSecretCombos = false;
+                                    Service.Configuration.Save();
                                 }
 
                                 ImGui.EndChild();
-                                ImGui.EndTabItem();
                             }
-                        }
 
-                        if (Service.Configuration.EnableExpandedCombos && Service.Configuration.EnableAccessibilityCombos)
-                        {
-                            if (ImGui.BeginTabItem("Accessibility"))
+
+                            if (Service.Configuration.UnlockSecretCombos && Service.Configuration.EnableAccessibilityCombos)
                             {
-                                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
-
-                                int i = 1;
-                                string previousSection = string.Empty;
-                                foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                                ImGui.SameLine();
+                                using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5)))
                                 {
-                                    previousSection = this.DrawPreset(Tabs.Accessibility, preset, info, previousSection, ref i);
-                                }
+                                    ImGui.BeginChild("ChildBR", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X - ImGui.GetScrollX(), 300f), true, window_flags);
 
-                                ImGui.EndChild();
-                                ImGui.EndTabItem();
+                                    using (ImRaii.PushFont(UiBuilder.MonoFont))
+                                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DPSRed))
+                                    {
+                                        ImGui.Text($"Secret Combos");
+                                    }
+                                    ImGui.Separator();
+
+                                    ImGui.BulletText("Those combos are optimization routes which give little benefits.");
+                                    ImGui.BulletText("They often lead to an unintuitive behavior or specific rotation routes.");
+                                    ImGui.BulletText("They generally require a heavy knowledge of your job.");
+                                    ImGui.BulletText("They are niche options, and probably pointless for most players.");
+
+                                    ImGui.Separator();
+                                    ImGui.Spacing();
+                                    ImGui.Spacing();
+
+                                    var showSecrets = Service.Configuration.EnableSecretCombos;
+                                    if (ImGui.Checkbox("Enable secret forbidden knowledge.\nThis option requires the accessibility combos to be enabled.", ref showSecrets))
+                                    {
+                                        Service.Configuration.EnableSecretCombos = showSecrets;
+                                        Service.Configuration.Save();
+                                    }
+
+                                    ImGui.EndChild();
+                                }
                             }
                         }
+                    }
+                }
+                #endregion
 
-                        if (Service.Configuration.EnableExpandedCombos && Service.Configuration.EnableAccessibilityCombos && Service.Configuration.EnableSecretCombos)
+                #region CHANGELOG TAB
+
+                using (var changelogTab = ImRaii.TabItem("Changelog"))
+                {
+                    if (changelogTab)
+                    {
+                        ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
+
+                        using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5)))
                         {
-                            if (ImGui.BeginTabItem("Secret"))
+                            var changelog = XIVComboExpanded.Interface.Changelog.GetChangelog();
+
+                            foreach (var (version, info) in changelog)
                             {
-                                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
-
-                                int i = 1;
-                                string previousSection = string.Empty;
-                                foreach (var (preset, info) in this.groupedPresets[Service.Configuration.CurrentJobTab])
+                                if (ImGui.CollapsingHeader(version, ImGuiTreeNodeFlags.DefaultOpen))
                                 {
-                                    previousSection = this.DrawPreset(Tabs.Secret, preset, info, previousSection, ref i);
+                                    ImGui.PushItemWidth(200);
+
+                                    ImGui.PopItemWidth();
+
+
+                                    using (ImRaii.PushColor(ImGuiCol.Text, this.shadedColor))
+                                    {
+
+                                        foreach (var text in info)
+                                        {
+                                            ImGui.BulletText(text);
+                                        }
+                                    }
+
+                                    ImGui.Spacing();
                                 }
-
-                                ImGui.EndChild();
-                                ImGui.EndTabItem();
                             }
-                        }
-
-                        ImGui.EndTabBar();
-                    }
-
-                    ImGui.EndChild();
-                }
-
-                ImGui.Unindent();
-
-                ImGui.EndGroup();
-
-                ImGui.EndTabItem();
-            }
-            #endregion
-
-            #region SETTINGS TAB
-
-            if (ImGui.BeginTabItem("Settings"))
-            {
-                ImGui.Spacing();
-                ImGui.Spacing();
-                ImGuiWindowFlags window_flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.ChildWindow;
-                ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 5f);
-                ImGui.BeginChild("ChildL", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X * 0.5f - ImGui.GetScrollX(), 300f), true, window_flags);
-
-                ImGui.PushFont(UiBuilder.MonoFont);
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedGold);
-                ImGui.Text($"General options");
-                ImGui.PopStyleColor();
-                ImGui.PopFont();
-                ImGui.Separator();
-
-                var enablePlugin = Service.Configuration.EnablePlugin;
-                if (ImGui.Checkbox("Enables this plugin.", ref enablePlugin))
-                {
-                    Service.Configuration.EnablePlugin = enablePlugin;
-                    Service.Configuration.Save();
-                }
-
-                if (ImGui.IsItemHovered())
-                {
-                    ImGui.BeginTooltip();
-                    ImGui.TextUnformatted("Completely disables the plugin's functionalities along with every combo when unchecked.");
-                    ImGui.EndTooltip();
-                }
-
-                var autoJobChange = Service.Configuration.AutoJobChange;
-                if (ImGui.Checkbox("Automatically switch to your current job's tab upon opening the UI.", ref autoJobChange))
-                {
-                    Service.Configuration.AutoJobChange = autoJobChange;
-                    Service.Configuration.Save();
-                }
-
-                var bigComboIcons = Service.Configuration.BigComboIcons;
-                if (ImGui.Checkbox("Increase the size of icons for combos and features.", ref bigComboIcons))
-                {
-                    Service.Configuration.BigComboIcons = bigComboIcons;
-                    Service.Configuration.Save();
-                }
-
-                var bigJobIcons = Service.Configuration.BigJobIcons;
-                if (ImGui.Checkbox("Increase the size of icons for the jobs on the side bar.", ref bigJobIcons))
-                {
-                    Service.Configuration.BigJobIcons = bigJobIcons;
-                    Service.Configuration.Save();
-                }
-
-                var hideIcons = Service.Configuration.HideIcons;
-                if (ImGui.Checkbox("Hide icons for combos and features.", ref hideIcons))
-                {
-                    Service.Configuration.HideIcons = hideIcons;
-                    Service.Configuration.Save();
-                }
-
-                var hideChildren = Service.Configuration.HideChildren;
-                if (ImGui.Checkbox("Hide children of disabled combos and features.", ref hideChildren))
-                {
-                    Service.Configuration.HideChildren = hideChildren;
-                    Service.Configuration.Save();
-                }
-
-                var hideKoFi = Service.Configuration.HideKofi;
-                if (ImGui.Checkbox("Hide the Ko-Fi link.", ref hideKoFi))
-                {
-                    Service.Configuration.HideKofi = hideKoFi;
-                    Service.Configuration.Save();
-                }
-
-                ImGui.Spacing();
-                ImGui.Spacing();
-
-                if (ImGui.Button("Re-open the first time pop-up window"))
-                {
-                    Service.Configuration.OneTimePopUp = true;
-                    Plugin.oneTimeModal.IsOpen = true;
-                    Service.Configuration.Save();
-                }
-
-                ImGui.EndChild();
-                ImGui.PopStyleVar();
-                ImGui.SameLine();
-
-                ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 5f);
-                ImGui.BeginChild("ChildR", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X - ImGui.GetScrollX(), 300f), true, window_flags);
-
-                ImGui.PushFont(UiBuilder.MonoFont);
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.TankBlue);
-                ImGui.Text($"Expanded Combos");
-                ImGui.PopStyleColor();
-                ImGui.PopFont();
-                ImGui.Separator();
-
-                ImGui.BulletText("Those combos are additional features absent in original XIVCombo.");
-                ImGui.BulletText("They usually aim at further reducing button bloating.");
-                ImGui.BulletText("They are also designed to bring QoL improvements to some jobs.");
-                ImGui.BulletText("They are meant to be used by anyone, whatever their reasons may be.");
-
-                ImGui.Separator();
-                ImGui.Spacing();
-                ImGui.Spacing();
-
-                var showExpanded = Service.Configuration.EnableExpandedCombos;
-                if (ImGui.Checkbox("Enable the expanded features for XIVCombo.", ref showExpanded))
-                {
-                    Service.Configuration.EnableExpandedCombos = showExpanded;
-                    if (!showExpanded)
-                    {
-                        Service.Configuration.EnableAccessibilityCombos = false;
-                        Service.Configuration.EnableSecretCombos = false;
-                    }
-
-                    Service.Configuration.Save();
-                }
-
-                ImGui.EndChild();
-                ImGui.PopStyleVar();
-
-                if (Service.Configuration.EnableExpandedCombos)
-                {
-                    ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 5f);
-                    ImGui.BeginChild("ChildBL", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X * 0.5f - ImGui.GetScrollX(), 300f), true, window_flags);
-
-                    ImGui.PushFont(UiBuilder.MonoFont);
-                    ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                    ImGui.Text($"Accessibility Combos");
-                    ImGui.PopStyleColor();
-                    ImGui.PopFont();
-                    ImGui.Separator();
-
-                    ImGui.BulletText("Those combos are non-optimal routes which simplify a rotation overall.");
-                    ImGui.BulletText("They are intuitive, and aim at considerably reducing button bloating.");
-                    ImGui.BulletText("They are meant to be used to give accessibility options to everyone.");
-                    ImGui.BulletText("They will often lower your ability to perform well in high-end content.");
-
-                    ImGui.Separator();
-                    ImGui.Spacing();
-                    ImGui.Spacing();
-
-                    var showAccessibility = Service.Configuration.EnableAccessibilityCombos;
-                    if (ImGui.Checkbox("Enable accessibility combos.", ref showAccessibility))
-                    {
-                        Service.Configuration.EnableAccessibilityCombos = showAccessibility;
-                        if (!showAccessibility) Service.Configuration.EnableSecretCombos = false;
-                        Service.Configuration.Save();
-                    }
-
-                    ImGui.EndChild();
-                    ImGui.PopStyleVar();
-
-
-                    if (Service.Configuration.UnlockSecretCombos && Service.Configuration.EnableAccessibilityCombos)
-                    {
-                        ImGui.SameLine();
-                        ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 5f);
-                        ImGui.BeginChild("ChildBR", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X - ImGui.GetScrollX(), 300f), true, window_flags);
-
-                        ImGui.PushFont(UiBuilder.MonoFont);
-                        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DPSRed);
-                        ImGui.Text($"Secret Combos");
-                        ImGui.PopStyleColor();
-                        ImGui.PopFont();
-                        ImGui.Separator();
-
-                        ImGui.BulletText("Those combos are optimization routes which give little benefits.");
-                        ImGui.BulletText("They often lead to an unintuitive behavior or specific rotation routes.");
-                        ImGui.BulletText("They generally require a heavy knowledge of your job.");
-                        ImGui.BulletText("They are niche options, and probably pointless for most players.");
-
-                        ImGui.Separator();
-                        ImGui.Spacing();
-                        ImGui.Spacing();
-
-                        var showSecrets = Service.Configuration.EnableSecretCombos;
-                        if (ImGui.Checkbox("Enable secret forbidden knowledge.\nThis option requires the accessibility combos to be enabled.", ref showSecrets))
-                        {
-                            Service.Configuration.EnableSecretCombos = showSecrets;
-                            Service.Configuration.Save();
                         }
 
                         ImGui.EndChild();
-                        ImGui.PopStyleVar();
                     }
                 }
+                #endregion
 
-                ImGui.EndTabItem();
-            }
-            #endregion
-
-            #region CHANGELOG TAB
-
-            if (ImGui.BeginTabItem("Changelog"))
-            {
-                ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
-
-                ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5));
-
-
-                var changelog = XIVComboExpanded.Interface.Changelog.GetChangelog();
-
-
-                foreach (var (version, info) in changelog)
+                #region ABOUT TAB
+                using (var aboutTab = ImRaii.TabItem("About"))
                 {
-                    if (ImGui.CollapsingHeader(version, ImGuiTreeNodeFlags.DefaultOpen))
+                    if (aboutTab)
                     {
-                        ImGui.PushItemWidth(200);
-
-                        ImGui.PopItemWidth();
-
-                        ImGui.PushStyleColor(ImGuiCol.Text, this.shadedColor);
-
-                        foreach (var text in info)
-                        {
-                            ImGui.BulletText(text);
-                        }
-
-                        ImGui.PopStyleColor();
+                        ImGui.Separator();
+                        ImGui.Spacing();
 
                         ImGui.Spacing();
+                        ImGui.Spacing();
+
+                        using (ImRaii.PushFont(UiBuilder.MonoFont))
+                        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudWhite2))
+                        {
+                            ImGui.Text("Statistics for nerds");
+                        }
+
+                        ImGui.Separator();
+                        ImGui.Spacing();
+
+                        ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && Service.Configuration.IsEnabled(preset)).Count()} combos are currently enabled.");
+                        ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && !Service.Configuration.IsExpanded(preset) && !Service.Configuration.IsAccessible(preset) && !Service.Configuration.IsSecret(preset)).Count()} Classic combos are available.");
+                        ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && Service.Configuration.IsExpanded(preset) && !Service.Configuration.IsAccessible(preset) && !Service.Configuration.IsSecret(preset)).Count()} Expanded combos are available.");
+                        ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && !Service.Configuration.IsExpanded(preset) && Service.Configuration.IsAccessible(preset) && !Service.Configuration.IsSecret(preset)).Count()} Accessibility combos are available.");
+                        ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && !Service.Configuration.IsExpanded(preset) && !Service.Configuration.IsAccessible(preset) && Service.Configuration.IsSecret(preset)).Count()} Secret combos are available.");
+                        ImGui.Text($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled).Count()} total combos are available.");
+
+                        ImGui.Separator();
+                        ImGui.Spacing();
+                        ImGui.Spacing();
+
+                        using (ImRaii.PushFont(UiBuilder.MonoFont))
+                        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudWhite2))
+                        {
+                            ImGui.Text("GitHub Repository");
+                        }
+
+                        ImGui.Separator();
+                        ImGui.Spacing();
+
+                        var url = "https://github.com/MKhayle/XIVComboExpanded";
+                        if (ImGui.Button("Open the GitHub Repository URL"))
+                        {
+                            Process.Start(new ProcessStartInfo { FileName = "https://github.com/MKhayle/XIVComboExpanded", UseShellExecute = true });
+                        }
+
+                        ImGui.SameLine();
+                        ImGui.Text(" ");
+                        ImGui.SameLine();
+                        ImGui.InputText("", ref url, 100, ImGuiInputTextFlags.ReadOnly);
+
+                        url = "https://github.com/daemitus/MyDalamudPlugins/raw/master/pluginmaster.json";
+
+                        if (ImGui.Button("Copy the Dalamud Repository URL"))
+                        {
+                            ImGui.SetClipboardText(url);
+                        }
+
+                        ImGui.SameLine();
+                        ImGui.InputText("", ref url, 100, ImGuiInputTextFlags.ReadOnly);
+
+                        ImGui.Spacing();
+                        ImGui.Spacing();
+                        using (ImRaii.PushFont(UiBuilder.MonoFont))
+                        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudWhite2))
+                        {
+                            ImGui.Text("Contributors and special thanks");
+                        }
+
+                        ImGui.Separator();
+                        ImGui.Spacing();
+
+                        ImGui.BulletText("goat and the whole Dalamud team");
+                        ImGui.BulletText("ff-meli for the initial concept");
+                        ImGui.BulletText("attick for XIVCombo");
+                        ImGui.BulletText("daemitus for creating XIVCombo Expanded");
+                        ImGui.BulletText("Grammernatzi for supporting the project");
+                        ImGui.BulletText("kaedys for considerably contributing to the repository");
+                        ImGui.BulletText("vitharr137 for some research work and collaboration");
+                        ImGui.Spacing();
+                        ImGui.Text("Additional thanks to all those contributors");
+                        ImGui.BulletText("aldros-ffxi");
+                        ImGui.BulletText("lhn1703");
+                        ImGui.BulletText("pliv-dev");
+                        ImGui.BulletText("bfabe8");
+                        ImGui.BulletText("mikel-gh");
+                        ImGui.BulletText("diwo");
+                        ImGui.BulletText("MayakoAelys");
+                        ImGui.BulletText("andyvorld");
+                        ImGui.BulletText("rz-1");
+                        ImGui.BulletText("AkiraChisaka");
+                        ImGui.BulletText("Aelexe");
+                        ImGui.BulletText("perks");
+                        ImGui.Spacing();
+                        ImGui.Text("And many others who contributed through issues, bug reporting or feature requests!");
                     }
                 }
+                #endregion
 
-                ImGui.PopStyleVar();
-
-                ImGui.EndChild();
-                ImGui.EndTabItem();
             }
-            #endregion
-
-            #region ABOUT TAB
-            if (ImGui.BeginTabItem("About"))
-            {
-                ImGui.Separator();
-                ImGui.Spacing();
-
-                ImGui.Spacing();
-                ImGui.Spacing();
-                ImGui.PushFont(UiBuilder.MonoFont);
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudWhite2);
-                ImGui.Text("Statistics for nerds");
-                ImGui.PopStyleColor();
-                ImGui.PopFont();
-                ImGui.Separator();
-                ImGui.Spacing();
-
-                ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && Service.Configuration.IsEnabled(preset)).Count()} combos are currently enabled.");
-                ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && !Service.Configuration.IsExpanded(preset) && !Service.Configuration.IsAccessible(preset) && !Service.Configuration.IsSecret(preset)).Count()} Classic combos are available.");
-                ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && Service.Configuration.IsExpanded(preset) && !Service.Configuration.IsAccessible(preset) && !Service.Configuration.IsSecret(preset)).Count()} Expanded combos are available.");
-                ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && !Service.Configuration.IsExpanded(preset) && Service.Configuration.IsAccessible(preset) && !Service.Configuration.IsSecret(preset)).Count()} Accessibility combos are available.");
-                ImGui.BulletText($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled && !Service.Configuration.IsExpanded(preset) && !Service.Configuration.IsAccessible(preset) && Service.Configuration.IsSecret(preset)).Count()} Secret combos are available.");
-                ImGui.Text($"{Enum.GetValues<CustomComboPreset>().Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled).Count()} total combos are available.");
-
-                ImGui.Separator();
-                ImGui.Spacing();
-                ImGui.Spacing();
-                ImGui.PushFont(UiBuilder.MonoFont);
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudWhite2);
-                ImGui.Text("GitHub Repository");
-                ImGui.PopStyleColor();
-                ImGui.PopFont();
-                ImGui.Separator();
-                ImGui.Spacing();
-
-                var url = "https://github.com/MKhayle/XIVComboExpanded";
-                if (ImGui.Button("Open the GitHub Repository URL"))
-                {
-                    Process.Start(new ProcessStartInfo { FileName = "https://github.com/MKhayle/XIVComboExpanded", UseShellExecute = true });
-                }
-
-                ImGui.SameLine();
-                ImGui.Text(" ");
-                ImGui.SameLine();
-                ImGui.InputText("", ref url, 100, ImGuiInputTextFlags.ReadOnly);
-
-                url = "https://github.com/daemitus/MyDalamudPlugins/raw/master/pluginmaster.json";
-                if (ImGui.Button("Copy the Dalamud Repository URL"))
-                {
-                    ImGui.SetClipboardText(url);
-                }
-
-                ImGui.SameLine();
-                ImGui.InputText("", ref url, 100, ImGuiInputTextFlags.ReadOnly);
-
-                ImGui.Spacing();
-                ImGui.Spacing();
-                ImGui.PushFont(UiBuilder.MonoFont);
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudWhite2);
-                ImGui.Text("Contributors and special thanks");
-                ImGui.PopStyleColor();
-                ImGui.PopFont();
-                ImGui.Separator();
-                ImGui.Spacing();
-
-                ImGui.BulletText("goat and the whole Dalamud team");
-                ImGui.BulletText("ff-meli for the initial concept");
-                ImGui.BulletText("attick for XIVCombo");
-                ImGui.BulletText("daemitus for creating XIVCombo Expanded");
-                ImGui.BulletText("Grammernatzi for supporting the project");
-                ImGui.BulletText("kaedys for considerably contributing to the repository");
-                ImGui.BulletText("vitharr137 for some research work and collaboration");
-                ImGui.Spacing();
-                ImGui.Text("Additional thanks to all those contributors");
-                ImGui.BulletText("aldros-ffxi");
-                ImGui.BulletText("lhn1703");
-                ImGui.BulletText("pliv-dev");
-                ImGui.BulletText("bfabe8");
-                ImGui.BulletText("mikel-gh");
-                ImGui.BulletText("diwo");
-                ImGui.BulletText("MayakoAelys");
-                ImGui.BulletText("andyvorld");
-                ImGui.BulletText("rz-1");
-                ImGui.BulletText("AkiraChisaka");
-                ImGui.BulletText("Aelexe");
-                ImGui.BulletText("perks");
-                ImGui.Spacing();
-                ImGui.Text("And many others who contributed through issues, bug reporting or feature requests!");
-
-                ImGui.EndTabItem();
-            }
-            #endregion
         }
 
-        ImGui.EndTabBar();
 
         ImGui.SameLine();
         ImGui.SetCursorPosX(ImGui.GetCursorPosX() + ImGui.GetColumnWidth() - 80f - ImGui.GetScrollX()
@@ -621,14 +642,14 @@ public class ConfigWindow : Window
 
         if (!Service.Configuration.HideKofi)
         {
-            ImGui.PushStyleColor(ImGuiCol.Button, ImGuiColors.DalamudRed);
-
-            if (ImGui.Button("My Ko-Fi link ♥"))
+            using (ImRaii.PushColor(ImGuiCol.Button, ImGuiColors.DalamudRed))
             {
-                Process.Start(new ProcessStartInfo { FileName = "https://ko-fi.com/khayle", UseShellExecute = true });
+                if (ImGui.Button("My Ko-Fi link ♥"))
+                {
+                    Process.Start(new ProcessStartInfo { FileName = "https://ko-fi.com/khayle", UseShellExecute = true });
+                }
             }
 
-            ImGui.PopStyleColor();
         }
     }
 
@@ -667,11 +688,11 @@ public class ConfigWindow : Window
 
         ImGui.Spacing();
         ImGui.Spacing();
-        ImGui.PushFont(UiBuilder.MonoFont);
-        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedOrange);
-        ImGui.Text(section);
-        ImGui.PopStyleColor();
-        ImGui.PopFont();
+        using (ImRaii.PushFont(UiBuilder.MonoFont))
+        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.ParsedOrange))
+        {
+            ImGui.Text(section);
+        };
         ImGui.Separator();
         ImGui.Spacing();
     }
@@ -748,11 +769,12 @@ public class ConfigWindow : Window
         if (expanded)
         {
             ImGui.SameLine();
-            ImGui.PushFont(UiBuilder.IconFont);
-            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.TankBlue);
-            ImGui.Text(FontAwesomeIcon.Star.ToIconString());
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
+
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.TankBlue))
+            {
+                ImGui.Text(FontAwesomeIcon.Star.ToIconString());
+            }
 
             if (ImGui.IsItemHovered())
             {
@@ -765,11 +787,12 @@ public class ConfigWindow : Window
         if (accessibility)
         {
             ImGui.SameLine();
-            ImGui.PushFont(UiBuilder.IconFont);
-            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-            ImGui.Text(FontAwesomeIcon.Star.ToIconString());
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
+
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))
+            {
+                ImGui.Text(FontAwesomeIcon.Star.ToIconString());
+            }
 
             if (ImGui.IsItemHovered())
             {
@@ -782,11 +805,12 @@ public class ConfigWindow : Window
         if (secret)
         {
             ImGui.SameLine();
-            ImGui.PushFont(UiBuilder.IconFont);
-            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DPSRed);
-            ImGui.Text(FontAwesomeIcon.Star.ToIconString());
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
+
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DPSRed))
+            {
+                ImGui.Text(FontAwesomeIcon.Star.ToIconString());
+            }
 
             if (ImGui.IsItemHovered())
             {
@@ -890,9 +914,13 @@ public class ConfigWindow : Window
 
         ImGui.PopItemWidth();
 
-        ImGui.PushStyleColor(ImGuiCol.Text, this.shadedColor);
+
+
+        using (ImRaii.PushColor(ImGuiCol.Text, this.shadedColor))
+        {
         ImGui.TextWrapped($"{info.Description}");
-        ImGui.PopStyleColor();
+        }
+
         ImGui.Spacing();
 
         if (conflicts.Length > 0 && enabled)
@@ -1064,9 +1092,22 @@ public class ConfigWindow : Window
             return String.Empty;
 
         Language language = (Language)Service.ClientState.ClientLanguage + 1;
-        var actionList = Service.DataManager.GameData.Excel.GetSheet<Action>(language);
-        var skill = actionList.GetRow(skillID);
-        return skill.Name;
+        if (language != Language.English)
+        {
+            var enActionList = Service.DataManager.GameData.Excel.GetSheet<Action>(Language.English);
+            var enSkill = enActionList.GetRow(skillID);
+            var level = enSkill.ClassJobLevel != 0 ? $" (lvl {enSkill.ClassJobLevel})" : string.Empty;
+            var actionList = Service.DataManager.GameData.Excel.GetSheet<Action>(language);
+            var skill = actionList.GetRow(skillID);
+            return $"{skill.Name}\n{enSkill.Name}{level}";
+        }
+        else
+        {
+            var actionList = Service.DataManager.GameData.Excel.GetSheet<Action>(language);
+            var skill = actionList.GetRow(skillID);
+            var level = skill.ClassJobLevel != 0 ? $" (lvl {skill.ClassJobLevel})" : string.Empty;
+            return $"{skill.Name}{level}";
+        }
 
     }
 
