@@ -663,8 +663,15 @@ public enum CustomComboPreset
     [IconsCombo([DRK.Souleater, UTL.ArrowLeft, DRK.Bloodspiller, UTL.Blank, UTL.Danger])]
     [ParentCombo(DarkSouleaterCombo)]
     [ExpandedCustomCombo]
-    [CustomComboInfo("Souleater Overcap Feature", "Replace Souleater with Bloodspiller when the next combo action would cause the Blood Gauge to overcap.", WAR.JobID)]
+    [CustomComboInfo("Souleater Overcap Feature", "Replace Souleater with Bloodspiller when the next combo action would cause the Blood Gauge to overcap.", DRK.JobID)]
     DarkSouleaterOvercapFeature = 3206,
+
+    [SectionCombo("Single Target")]
+    [IconsCombo([DRK.Souleater, UTL.ArrowLeft, DRK.Bloodspiller, UTL.Blank, UTL.Danger, UTL.Blank, DRK.Buffs.Delirium, UTL.Idea])]
+    [ParentCombo(DarkSouleaterOvercapFeature)]
+    [SecretCustomCombo]
+    [CustomComboInfo("Souleater Overcap Optimized Feature", "Replace Souleater with Bloodspiller when the next combo action would cause the Blood Gauge to exceed 70 when Delirium is about to be off cooldown.\nUpon using Delirium the next 3 gcds will generate 10 gauge each so any banked Blood Gauge over 70 is wasted.", DRK.JobID)]
+    DarkSouleaterOvercapOptimizedFeature = 3212,
 
     [SectionCombo("Area of Effect")]
     [IconsCombo([DRK.StalwartSoul, UTL.ArrowLeft, DRK.Unleash])]
@@ -675,8 +682,15 @@ public enum CustomComboPreset
     [IconsCombo([DRK.StalwartSoul, UTL.ArrowLeft, DRK.Quietus, UTL.Blank, UTL.Danger])]
     [ParentCombo(DarkStalwartSoulCombo)]
     [ExpandedCustomCombo]
-    [CustomComboInfo("Stalwart Soul Overcap Feature", "Replace Stalwart Soul with Quietus when the next combo action would cause the Blood Gauge to overcap.", WAR.JobID)]
+    [CustomComboInfo("Stalwart Soul Overcap Feature", "Replace Stalwart Soul with Quietus when the next combo action would cause the Blood Gauge to overcap.", DRK.JobID)]
     DarkStalwartSoulOvercapFeature = 3207,
+
+    [SectionCombo("Area of Effect")]
+    [IconsCombo([DRK.StalwartSoul, UTL.ArrowLeft, DRK.Quietus, UTL.Blank, UTL.Danger, UTL.Blank, DRK.Buffs.Delirium, UTL.Idea])]
+    [ParentCombo(DarkStalwartSoulCombo)]
+    [SecretCustomCombo]
+    [CustomComboInfo("Stalwart Soul Overcap Optimized Feature", "Replace Stalwart Soul with Quietus when the next combo action would cause the Blood Gauge to exceed 70 when Delirium is about to be off cooldown.\nUpon using Delirium the next 3 gcds will generate 10 gauge each so any banked Blood Gauge over 70 is wasted.", DRK.JobID)]
+    DarkStalwartSoulOvercapOptimizedFeature = 3213,
 
     [SectionCombo("Blood Weapon")]
     [IconsCombo([DRK.Souleater, DRK.StalwartSoul, UTL.ArrowLeft, DRK.Bloodspiller, DRK.Quietus, UTL.Blank, DRK.Buffs.Delirium, UTL.Checkmark])]
@@ -707,6 +721,18 @@ public enum CustomComboPreset
     [ExpandedCustomCombo]
     [CustomComboInfo("Missing Shadowbringer Feature", "Replace Living Shadow with Shadowbringer when charges are available and Living Shadow is on cooldown.", DRK.JobID)]
     DarkLivingShadowbringerHpFeature = 3209,
+
+    [SectionCombo("Living Shadow")]
+    [IconsCombo([DRK.Bloodspiller, DRK.Quietus, UTL.ArrowLeft, DRK.Disesteem, UTL.Blank, DRK.Buffs.Scorn, UTL.Checkmark])]
+    [ExpandedCustomCombo]
+    [CustomComboInfo("Disesteem Feature", "Replace Bloodspiller and Quietus with Disesteem when Scorn is active.", DRK.JobID)]
+    DarkDisesteemFeature = 3210,
+
+    [SectionCombo("Living Shadow")]
+    [IconsCombo([DRK.Souleater, DRK.StalwartSoul, UTL.ArrowLeft, DRK.Disesteem, UTL.Blank, DRK.Buffs.Scorn, UTL.Checkmark])]
+    [AccessibilityCustomCombo]
+    [CustomComboInfo("Disesteem Souleater Feature", "Replace Souleater and Stalwart Soul with Disesteem when Scorn is active.", DRK.JobID)]
+    DarkDisesteemComboFeature = 3211,
 
     #endregion
     // ====================================================================================

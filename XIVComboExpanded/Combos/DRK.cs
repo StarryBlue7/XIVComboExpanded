@@ -27,10 +27,12 @@ internal static class DRK
         SaltAndDarkness = 25755,
         Shadowbringer = 25757,
         GritRemoval = 32067,
+        Delirium = 7390,
         ScarletDelirium = 36928,
         Comeuppance = 36929,
         Torcleaver = 36930,
-        Impalement = 36931;
+        Impalement = 36931,
+        Disesteem = 36932;
 
     public static class Buffs
     {
@@ -39,7 +41,8 @@ internal static class DRK
             Grit = 743,
             Darkside = 751,
             Delirium = 1972,
-            ScarletDelirium = 3836;
+            ScarletDelirium = 3836,
+            Scorn = 3837;
     }
 
     public static class Debuffs
@@ -71,7 +74,8 @@ internal static class DRK
             ScarletDelirium = 96,
             Comeuppance = 96,
             Torcleaver = 96,
-            Impalement = 96;
+            Impalement = 96,
+            Disesteem = 100;
     }
 }
 
@@ -98,8 +102,19 @@ internal class DarkSouleater : CustomCombo
             {
                 if (IsEnabled(CustomComboPreset.DarkSouleaterOvercapFeature))
                 {
+                    if (IsEnabled(CustomComboPreset.DarkSouleaterOvercapOptimizedFeature))
+                    {
+                        if (level >= DRK.Levels.Bloodspiller && gauge.Blood > 70 && GetCooldown(DRK.Delirium).CooldownRemaining < 5.0)
+                            return OriginalHook(DRK.Bloodspiller);
+                    }
                     if (level >= DRK.Levels.Bloodspiller && gauge.Blood > 90 && HasEffect(DRK.Buffs.BloodWeapon))
                         return OriginalHook(DRK.Bloodspiller);
+                }
+
+                if (IsEnabled(CustomComboPreset.DarkDisesteemComboFeature))
+                {
+                    if (level > DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
+                        return DRK.Disesteem;
                 }
 
                 if (comboTime > 0)
@@ -150,8 +165,19 @@ internal class DarkStalwartSoul : CustomCombo
             {
                 if (IsEnabled(CustomComboPreset.DarkStalwartSoulOvercapFeature))
                 {
+                    if (IsEnabled(CustomComboPreset.DarkStalwartSoulOvercapOptimizedFeature))
+                    {
+                        if (level >= DRK.Levels.Quietus && gauge.Blood > 70 && GetCooldown(DRK.Delirium).CooldownRemaining < 5.0)
+                            return OriginalHook(DRK.Quietus);
+                    }
                     if (level >= DRK.Levels.Quietus && gauge.Blood > 90 && HasEffect(DRK.Buffs.BloodWeapon))
                         return OriginalHook(DRK.Quietus);
+                }
+
+                if (IsEnabled(CustomComboPreset.DarkDisesteemComboFeature))
+                {
+                    if (level > DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
+                        return DRK.Disesteem;
                 }
 
                 if (comboTime > 0)
@@ -215,6 +241,12 @@ internal class DarkQuietusBloodspiller : CustomCombo
             {
                 if (level >= DRK.Levels.LivingShadow && IsCooldownUsable(DRK.LivingShadow))
                     return DRK.LivingShadow;
+            }
+
+            if (IsEnabled(CustomComboPreset.DarkDisesteemFeature))
+            {
+                if (level > DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
+                    return DRK.Disesteem;
             }
         }
 
