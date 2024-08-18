@@ -113,7 +113,7 @@ internal class DarkSouleater : CustomCombo
 
                 if (IsEnabled(CustomComboPreset.DarkDisesteemComboFeature))
                 {
-                    if (level > DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
+                    if (level >= DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
                         return DRK.Disesteem;
                 }
 
@@ -176,7 +176,7 @@ internal class DarkStalwartSoul : CustomCombo
 
                 if (IsEnabled(CustomComboPreset.DarkDisesteemComboFeature))
                 {
-                    if (level > DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
+                    if (level >= DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
                         return DRK.Disesteem;
                 }
 
@@ -245,7 +245,7 @@ internal class DarkQuietusBloodspiller : CustomCombo
 
             if (IsEnabled(CustomComboPreset.DarkDisesteemFeature))
             {
-                if (level > DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
+                if (level >= DRK.Levels.Disesteem && HasEffect(DRK.Buffs.Scorn))
                     return DRK.Disesteem;
             }
         }
