@@ -260,7 +260,7 @@ public enum CustomComboPreset
     [SectionCombo("Single Target")]
     [ParentCombo(BlackEnochianFeature)]
     [SecretCustomCombo]
-    [CustomComboInfo("Enochian Umbral Ice Feature", "Replace Fire 4 and Blizzard 4 with Instant-Blizzard 3 or Blizzard 1 when in Umbral Ice 1 or 2. This facilitates Umbral Ice transpose line (Astral Fire -> transpose -> instant-B3; this negates 0.7x Blizzard 3 damage multiplier in Astral Fire 3) and GIRL emergency recovery transpose line (Astral Fire -> Tranpose -> Paradox -> Blizzard 1).", BLM.JobID)]
+    [CustomComboInfo("Enochian Umbral Ice Feature", "Replace Fire 4 and Blizzard 4 with Instant-Blizzard 3 or Blizzard 1 when in Umbral Ice 1 or 2. This facilitates Umbral Ice transpose line (Astral Fire -> transpose -> instant-B3; negating 0.7x Blizzard 3 damage multiplier in Astral Fire 3) and GIRL [Geiji Ice Recovery Line] emergency recovery transpose line (Astral Fire -> Tranpose -> Paradox -> Blizzard 1).", BLM.JobID)]
     BlackEnochianUmbralIceFeature = 2527,
 
     [IconsCombo([BLM.Fire, UTL.ArrowLeft, BLM.Fire3,  UTL.Blank, BLM.Buffs.Firestarter, UTL.Checkmark])]
