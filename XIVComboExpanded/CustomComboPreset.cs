@@ -256,6 +256,13 @@ public enum CustomComboPreset
     [CustomComboInfo("Enochian No Sync Feature", "Fire 4 and Blizzard 4 will not sync to Fire 1 and Blizzard 1.", BLM.JobID)]
     BlackEnochianNoSyncFeature = 2518,
 
+    [IconsCombo([BLM.Fire4, BLM.Blizzard4, UTL.ArrowLeft, ADV.Swiftcast, BLM.Triplecast, BLM.Blizzard3, UTL.Blank, BLM.Blizzard, UTL.Blank, UTL.Idea])]
+    [SectionCombo("Single Target")]
+    [ParentCombo(BlackEnochianFeature)]
+    [SecretCustomCombo]
+    [CustomComboInfo("Enochian Umbral Ice Feature", "Replace Fire 4 and Blizzard 4 with Instant-Blizzard 3 or Blizzard 1 when in Umbral Ice 1 or 2. This facilitates Umbral Ice transpose line (negates 0.7x Blizzard 3 damage multiplier in Astral Fire 3) and GIRL emergency recovery transpose line (Astral Fire -> Tranpose -> Paradox -> Blizzard 1).", BLM.JobID)]
+    BlackEnochianUmbralIceFeature = 2527,
+
     [IconsCombo([BLM.Fire, UTL.ArrowLeft, BLM.Fire3,  UTL.Blank, BLM.Buffs.Firestarter, UTL.Checkmark])]
     [SectionCombo("Single Target")]
     [ExpandedCustomCombo]
