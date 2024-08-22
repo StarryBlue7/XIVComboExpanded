@@ -126,7 +126,9 @@ internal class BlackFireBlizzard4 : CustomCombo
                             if (((HasEffect(BLM.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast))
                             && gauge.ElementTimeRemaining / 1000.0 < fire4.BaseCooldown * 1.10) || gauge.ElementTimeRemaining / 1000.0 < fire4.CastTime * 1.10)
                             {
-                                if (level > BLM.Levels.Despair && LocalPlayer?.CurrentMp > 0 && LocalPlayer?.CurrentMp < 2400 && (HasEffect(BLM.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast)))
+                                if (level >= BLM.Levels.Despair &&
+                                    LocalPlayer?.CurrentMp >= 800 && LocalPlayer?.CurrentMp < 2400 &&
+                                    (HasEffect(BLM.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast)))
                                     return BLM.Despair;
                                 if (HasEffect(BLM.Buffs.Firestarter))
                                     return BLM.Fire3;
@@ -142,7 +144,9 @@ internal class BlackFireBlizzard4 : CustomCombo
                         if (IsEnabled(CustomComboPreset.BlackEnochianDespairFlareStarFeature))
                         {
                             // 2nd and 3rd checks for opener and post-manafont usage
-                            if (level >= BLM.Levels.FlareStar && gauge.AstralSoulStacks >= 6 && (LocalPlayer?.CurrentMp <= 0 || LocalPlayer?.CurrentMp == 8400 || LocalPlayer?.CurrentMp == 10000))
+                            if (level >= BLM.Levels.FlareStar && gauge.AstralSoulStacks >= 6 &&
+                                (LocalPlayer?.CurrentMp <= 0 || LocalPlayer?.CurrentMp == 8400 ||
+                                LocalPlayer?.CurrentMp == 10000))
                                 return BLM.FlareStar;
                         }
 
@@ -179,7 +183,7 @@ internal class BlackTranspose : CustomCombo
         if (actionID == BLM.Transpose)
         {
             var gauge = GetJobGauge<BLMGauge>();
-            if (level >= BLM.Levels.UmbralSoul && gauge.IsEnochianActive && gauge.InUmbralIce)
+            if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce)
                 return BLM.UmbralSoul;
         }
 
@@ -197,7 +201,7 @@ internal class BlackUmbralSoul : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (level < BLM.Levels.UmbralSoul || (gauge.IsEnochianActive && gauge.InAstralFire))
+            if (level < BLM.Levels.UmbralSoul || !gauge.InUmbralIce)
                 return BLM.Transpose;
         }
 
@@ -280,7 +284,7 @@ internal class BlackBlizzard : CustomCombo
                 if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
                 {
                     if (gauge.InUmbralIce || LocalPlayer?.CurrentMp >= 1600)
-                        return BLM.Paradox;
+                    return BLM.Paradox;
                 }
 
                 if (level >= BLM.Levels.Blizzard3)
