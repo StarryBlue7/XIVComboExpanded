@@ -152,9 +152,9 @@ internal class AstrologianGravity : CustomCombo
     }
 }
 
-internal class AstrologianPlay : CustomCombo
+internal class AstrologianPlayIDraw : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayDrawFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIDrawFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -163,14 +163,50 @@ internal class AstrologianPlay : CustomCombo
         if (OriginalHook(actionID) == AST.Play1 && IsOriginal(AST.Play1))
             return gauge.ActiveDraw == DrawType.ASTRAL ? OriginalHook(AST.AstralDraw) : OriginalHook(AST.UmbralDraw);
 
-        // if (OriginalHook(actionID) == AST.Play2 && IsOriginal(AST.Play2))
-        //     return gauge.ActiveDraw == DrawType.ASTRAL ? OriginalHook(AST.AstralDraw) : OriginalHook(AST.UmbralDraw);
+        return actionID;
+    }
+}
 
-        // if (OriginalHook(actionID) == AST.Play3 && IsOriginal(AST.Play3))
-        //     return gauge.ActiveDraw == DrawType.ASTRAL ? OriginalHook(AST.AstralDraw) : OriginalHook(AST.UmbralDraw);
+internal class AstrologianPlayIIDraw : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIIDrawFeature;
 
-        // if (OriginalHook(actionID) == AST.MinorArcanaDT && IsOriginal(AST.MinorArcanaDT))
-        //     return gauge.ActiveDraw == DrawType.ASTRAL ? OriginalHook(AST.AstralDraw) : OriginalHook(AST.UmbralDraw);
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        var gauge = GetJobGauge<ASTGauge>();
+
+        if (OriginalHook(actionID) == AST.Play2 && IsOriginal(AST.Play2))
+            return gauge.ActiveDraw == DrawType.ASTRAL ? OriginalHook(AST.AstralDraw) : OriginalHook(AST.UmbralDraw);
+
+        return actionID;
+    }
+}
+
+internal class AstrologianPlayIIIDraw : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIIIDrawFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        var gauge = GetJobGauge<ASTGauge>();
+
+        if (OriginalHook(actionID) == AST.Play3 && IsOriginal(AST.Play3))
+            return gauge.ActiveDraw == DrawType.ASTRAL ? OriginalHook(AST.AstralDraw) : OriginalHook(AST.UmbralDraw);
+
+        return actionID;
+    }
+}
+
+internal class AstrologianMinorAracana : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMinorArcanaDrawFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        var gauge = GetJobGauge<ASTGauge>();
+
+        if (OriginalHook(actionID) == AST.MinorArcanaDT && IsOriginal(AST.MinorArcanaDT))
+            return gauge.ActiveDraw == DrawType.ASTRAL ? OriginalHook(AST.AstralDraw) : OriginalHook(AST.UmbralDraw);
 
         return actionID;
     }
