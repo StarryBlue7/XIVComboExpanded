@@ -212,6 +212,19 @@ internal class AstrologianMinorAracana : CustomCombo
     }
 }
 
+internal class AstrologianPlayIIIExaltation : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIIIExaltationFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (OriginalHook(actionID) == AST.Play3 && IsOriginal(AST.Play3))
+            return OriginalHook(AST.Exaltation);
+
+        return actionID;
+    }
+}
+
 internal class AstrologianBenefic2 : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficSyncFeature;

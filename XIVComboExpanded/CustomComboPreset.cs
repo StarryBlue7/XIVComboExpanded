@@ -181,6 +181,7 @@ public enum CustomComboPreset
 
     [SectionCombo("Draw features")]
     [IconsCombo([AST.Play3, UTL.ArrowLeft, AST.AstralDraw, AST.UmbralDraw])]
+    [ConflictingCombos(AstrologianPlayIIIExaltationFeature)]
     [CustomComboInfo("Play III to Astral/Umbral Draw", "Replace Play III with Astral/Umbral Draw when no card is drawn and you can draw.", AST.JobID)]
     AstrologianPlayIIIDrawFeature = 3330,
 
@@ -188,6 +189,12 @@ public enum CustomComboPreset
     [IconsCombo([AST.MinorArcanaDT, UTL.ArrowLeft, AST.AstralDraw, AST.UmbralDraw])]
     [CustomComboInfo("Minor Arcana to Astral/Umbral Draw", "Replace Minor Arcana with Astral/Umbral Draw when no card is drawn and you can draw.", AST.JobID)]
     AstrologianMinorArcanaDrawFeature = 3331,
+
+    [SectionCombo("Draw features")]
+    [IconsCombo([AST.Play3, UTL.ArrowLeft, AST.Exaltation])]
+    [ConflictingCombos(AstrologianPlayIIIDrawFeature)]
+    [CustomComboInfo("Play III to Exaltation", "Replace Play III with Exaltation when no card is drawn.", AST.JobID)]
+    AstrologianPlayIIIExaltationFeature = 3332,
 
     [SectionCombo("Draw features")]
     [IconsCombo([AST.Malefic, UTL.ArrowLeft, AST.AstralDraw, AST.UmbralDraw])]
