@@ -155,7 +155,7 @@ internal class AstrologianGravity : CustomCombo
 
 internal class AstrologianPlayIDraw : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIDrawFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlay1DrawFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -170,7 +170,7 @@ internal class AstrologianPlayIDraw : CustomCombo
 
 internal class AstrologianPlayIIDraw : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIIDrawFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlay2DrawFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -185,7 +185,7 @@ internal class AstrologianPlayIIDraw : CustomCombo
 
 internal class AstrologianPlayIIIDraw : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIIIDrawFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlay3DrawFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -213,7 +213,20 @@ internal class AstrologianMinorAracana : CustomCombo
     }
 }
 
-internal class AstrologianPlayIIIExaltation : CustomCombo
+internal class AstrologianPlay2Abilities : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlay2AbilitiesFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (OriginalHook(actionID) == AST.Play2 && IsOriginal(AST.Play2))
+            return IsEnabled(CustomComboPreset.AstrologianPlay2IntersectionFeature) ? OriginalHook(AST.CelestialIntersection) : OriginalHook(AST.Exaltation);
+
+        return actionID;
+    }
+}
+
+internal class AstrologianPlay3Abilities : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlay3AbilitiesFeature;
 
