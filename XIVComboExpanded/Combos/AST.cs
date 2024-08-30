@@ -39,6 +39,7 @@ internal static class AST
         CelestialOpposition = 16553,
         Malefic4 = 16555,
         Horoscope = 16557,
+        CelestialIntersection = 16556,
         NeutralSect = 16559,
         Play = 17055,
         CrownPlay = 25869,
@@ -219,7 +220,7 @@ internal class AstrologianPlayIIIExaltation : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (OriginalHook(actionID) == AST.Play3 && IsOriginal(AST.Play3))
-            return OriginalHook(AST.Exaltation);
+            return OriginalHook(AST.CelestialIntersection);
 
         return actionID;
     }
