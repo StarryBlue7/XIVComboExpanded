@@ -215,12 +215,12 @@ internal class AstrologianMinorAracana : CustomCombo
 
 internal class AstrologianPlayIIIExaltation : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayIIIExaltationFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlay3AbilitiesFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (OriginalHook(actionID) == AST.Play3 && IsOriginal(AST.Play3))
-            return OriginalHook(AST.CelestialIntersection);
+            return IsEnabled(CustomComboPreset.AstrologianPlay3ExaltationFeature) ? OriginalHook(AST.Exaltation) : OriginalHook(AST.CelestialIntersection);
 
         return actionID;
     }
