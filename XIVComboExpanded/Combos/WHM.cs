@@ -218,7 +218,6 @@ internal class WhiteMageGlare4Feature : CustomCombo
                 return WHM.Glare4;
         }
 
-
         return actionID;
     }
 }
