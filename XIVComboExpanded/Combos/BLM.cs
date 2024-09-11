@@ -162,9 +162,15 @@ internal class BlackFireBlizzard4 : CustomCombo
 
                 if (gauge.InUmbralIce)
                 {
+                    if (IsEnabled(CustomComboPreset.BlackEnochianUmbralIceFeature) && gauge.UmbralIceStacks < 3)
+                    {
+                        if (level >= BLM.Levels.Blizzard3 && (HasEffect(BLM.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast)))
+                            return BLM.Blizzard3; 
+                        return OriginalHook(BLM.Blizzard);
+                    }
+
                     if (IsEnabled(CustomComboPreset.BlackEnochianNoSyncFeature) || level >= BLM.Levels.Blizzard4)
                         return BLM.Blizzard4;
-
                     return BLM.Blizzard;
                 }
             }
