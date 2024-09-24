@@ -183,7 +183,7 @@ internal class ReaperSlice : CustomCombo
                     return RPR.Perfectio;
             }
 
-            if (IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
+            if (level > RPR.Levels.BloodStalk && IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
             {
                 // Blood Stalk if we're over 90 gauge, or if we're over 50 and the overcap-only feature isn't enabled,
                 // or if the auto-Soul Slice feature is enabled and our next action would otherwise be Soul Slice.
@@ -200,7 +200,7 @@ internal class ReaperSlice : CustomCombo
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.ReaperAutoSoulSliceFeature))
+            if (level > RPR.Levels.SoulSlice && IsEnabled(CustomComboPreset.ReaperAutoSoulSliceFeature))
             {
                 if (IsCooldownUsable(RPR.SoulSlice) && gauge.Soul <= 50)
                     return RPR.SoulSlice;
@@ -208,14 +208,11 @@ internal class ReaperSlice : CustomCombo
 
             if (IsEnabled(CustomComboPreset.ReaperSliceCombo))
             {
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == RPR.WaxingSlice && level >= RPR.Levels.InfernalSlice)
-                        return RPR.InfernalSlice;
+                if (lastComboMove == RPR.WaxingSlice && level >= RPR.Levels.InfernalSlice)
+                    return RPR.InfernalSlice;
 
-                    if (lastComboMove == RPR.Slice && level >= RPR.Levels.WaxingSlice)
-                        return RPR.WaxingSlice;
-                }
+                if (lastComboMove == RPR.Slice && level >= RPR.Levels.WaxingSlice)
+                    return RPR.WaxingSlice;
 
                 return RPR.Slice;
             }
@@ -241,8 +238,7 @@ internal class ReaperScythe : CustomCombo
                     return RPR.Soulsow;
             }
 
-            if (level >= RPR.Levels.SoulReaver &&
-                IsEnabled(CustomComboPreset.ReaperScytheGuillotineFeature))
+            if (level >= RPR.Levels.SoulReaver && IsEnabled(CustomComboPreset.ReaperScytheGuillotineFeature))
             {
                 if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
@@ -285,7 +281,7 @@ internal class ReaperScythe : CustomCombo
                     return RPR.HarvestMoon;
             }
 
-            if (IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
+            if (level > RPR.Levels.GrimSwathe && IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
             {
                 // Blood Stalk if we're over 90 gauge, or if we're over 50 and the overcap-only feature isn't enabled,
                 // or if the auto-Soul Slice feature is enabled and our next action would otherwise be Soul Slice.
@@ -302,7 +298,7 @@ internal class ReaperScythe : CustomCombo
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.ReaperAutoSoulSliceFeature))
+            if (level > RPR.Levels.SoulScythe && IsEnabled(CustomComboPreset.ReaperAutoSoulSliceFeature))
             {
                 if (IsCooldownUsable(RPR.SoulScythe) && gauge.Soul <= 50)
                     return RPR.SoulScythe;
@@ -310,11 +306,8 @@ internal class ReaperScythe : CustomCombo
 
             if (IsEnabled(CustomComboPreset.ReaperScytheCombo))
             {
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == RPR.SpinningScythe && level >= RPR.Levels.NightmareScythe)
-                        return RPR.NightmareScythe;
-                }
+                if (lastComboMove == RPR.SpinningScythe && level >= RPR.Levels.NightmareScythe)
+                    return RPR.NightmareScythe;
 
                 return RPR.SpinningScythe;
             }
@@ -468,7 +461,7 @@ internal class ReaperSoulSlice : CustomCombo
                     return OriginalHook(RPR.Gallows);
                 }
 
-                if (IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
+                if (level > RPR.Levels.BloodStalk && IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
                 {
                     if (gauge.Soul >= 50 && (gauge.Soul > 50 ||
                         !IsEnabled(CustomComboPreset.ReaperReaperAutoBloodStalkOvercapFeature)))
@@ -497,16 +490,47 @@ internal class ReaperSoulScythe : CustomCombo
         {
             var gauge = GetJobGauge<RPRGauge>();
 
-            if (IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
+            if (level >= RPR.Levels.SoulReaver && IsEnabled(CustomComboPreset.ReaperSoulScytheGuillotineFeature))
             {
-                if (gauge.Soul >= 50 && (gauge.Soul > 50 ||
-                    !IsEnabled(CustomComboPreset.ReaperReaperAutoBloodStalkOvercapFeature)))
+                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
-                    if (IsEnabled(CustomComboPreset.ReaperSoulReaverGluttonyFeature) &&
-                        level >= RPR.Levels.Gluttony && IsCooldownUsable(RPR.Gluttony))
-                        return RPR.Gluttony;
+                    if (IsEnabled(CustomComboPreset.ReaperSoulReaverLemuresFeature))
+                    {
+                        if (level >= RPR.Levels.EnhancedShroud && gauge.VoidShroud >= 2)
+                            return RPR.LemuresScythe;
 
-                    return OriginalHook(RPR.GrimSwathe);
+                        if (IsEnabled(CustomComboPreset.ReaperLemuresSacrificiumFeature))
+                        {
+                            if (level >= RPR.Levels.Sacrificium && HasEffect(RPR.Buffs.Oblatio) &&
+                                (gauge.LemureShroud == 2 || (gauge.LemureShroud == 4 &&
+                                !IsEnabled(CustomComboPreset.ReaperSacrificiumAdvancedFeature))))
+                                return RPR.Sacrificium;
+                        }
+                    }
+
+                    if (IsEnabled(CustomComboPreset.ReaperSoulReaverCommunioFeature))
+                    {
+                        if (level >= RPR.Levels.Communio && gauge.LemureShroud == 1)
+                            return RPR.Communio;
+                    }
+
+                    return RPR.GrimReaping;
+                }
+
+                if (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Executioner))
+                    return OriginalHook(RPR.Guillotine);
+
+                if (level > RPR.Levels.GrimSwathe && IsEnabled(CustomComboPreset.ReaperAutoSoulReaverFeature))
+                {
+                    if (gauge.Soul >= 50 && (gauge.Soul > 50 ||
+                        !IsEnabled(CustomComboPreset.ReaperReaperAutoBloodStalkOvercapFeature)))
+                    {
+                        if (IsEnabled(CustomComboPreset.ReaperSoulReaverGluttonyFeature) &&
+                            level >= RPR.Levels.Gluttony && IsCooldownUsable(RPR.Gluttony))
+                            return RPR.Gluttony;
+
+                        return OriginalHook(RPR.GrimSwathe);
+                    }
                 }
             }
         }
@@ -633,7 +657,7 @@ internal class ReaperGibbetGallowsGuillotine : CustomCombo
                 return actionID;
             }
 
-            if (IsEnabled(CustomComboPreset.ReaperSoulReaverEnhancedFeature) &&
+            if (level >= RPR.Levels.SoulReaver && IsEnabled(CustomComboPreset.ReaperSoulReaverEnhancedFeature) &&
                 (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Executioner)))
             {
                 if (HasEffect(RPR.Buffs.EnhancedGibbet))

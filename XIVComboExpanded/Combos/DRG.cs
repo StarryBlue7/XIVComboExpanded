@@ -55,6 +55,7 @@ internal static class DRG
             DiveReady = 1243,
             DraconianFire = 1863,
             PowerSurge = 2720,
+            NastrondReady = 3844,
             Dragonsflight = 3845,
             StarcrossReady = 3846;
     }
@@ -152,7 +153,7 @@ internal class DragoonSingleTargetThrust : CustomCombo
                 IsEnabled(CustomComboPreset.DragoonFullThrustCombo) ||
                 IsEnabled(CustomComboPreset.DragoonAllInOneCombo)) &&
                 level >= DRG.Levels.Drakesbane &&
-                (lastComboMove == DRG.WheelingThrust ||  lastComboMove == DRG.FangAndClaw))
+                (lastComboMove == DRG.WheelingThrust || lastComboMove == DRG.FangAndClaw))
                 return DRG.Drakesbane;
 
             if ((IsEnabled(CustomComboPreset.DragoonFullThrustCombo) &&
@@ -206,6 +207,7 @@ internal class DragoonSingleTargetThrust : CustomCombo
                         buffThreshold -= 2.5;
                         dotThreshold -= 2.5;
                     }
+
                     if (level < DRG.Levels.FangAndClaw)
                     {
                         buffThreshold -= 2.5;
@@ -293,16 +295,8 @@ internal class DragoonGierskogul : CustomCombo
             if (level >= DRG.Levels.WyrmwindThrust)
             {
                 var gauge = GetJobGauge<DRGGauge>();
-
-                if (gauge.FirstmindsFocusCount == 2)
-                {
-                    var action = gauge.IsLOTDActive
-                        ? DRG.Nastrond
-                        : DRG.Geirskogul;
-
-                    if (!IsCooldownUsable(action))
-                        return DRG.WyrmwindThrust;
-                }
+                if (gauge.FirstmindsFocusCount == 2 && !IsCooldownUsable(DRG.Geirskogul))
+                    return DRG.WyrmwindThrust;
             }
         }
 
@@ -318,10 +312,10 @@ internal class DragoonLanceCharge : CustomCombo
     {
         if (actionID == DRG.LanceCharge)
         {
-            if (!!IsCooldownUsable(DRG.LanceCharge))
+            if (IsCooldownUsable(DRG.LanceCharge))
                 return DRG.LanceCharge;
 
-            if (level >= DRG.Levels.BattleLitany && !!IsCooldownUsable(DRG.BattleLitany))
+            if (level >= DRG.Levels.BattleLitany && IsCooldownUsable(DRG.BattleLitany))
                 return DRG.BattleLitany;
         }
 
